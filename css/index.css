@@ -1,0 +1,42 @@
+
+* {
+    box-sizing: border-box;
+}
+.inputs_container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.container_input{
+    max-height: 300px;
+    overflow: auto;
+    padding: 5px;
+    border: 1px dashed blue;
+}
+
+.input-textarea {
+    width: 100%;
+    resize: auto;
+}
+
+.btn-check_properties_doubles,
+.btn_modify_properties {
+    margin: 10px auto;
+}
+
+.screen-results_repeats {
+    background-color: yellow;
+}
+
+.screen-results_properties_notfound {
+    background-color: red;
+    color: white;
+}
+
+.screen-results_properties_before {
+    background-color: yellowgreen;
+}
+
+.screen-results_properties_after {
+    background-color: lightblue;
+}

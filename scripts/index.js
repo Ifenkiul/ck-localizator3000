@@ -1,4 +1,4 @@
-let properties = {};
+let properties = [[], []];
 let values = [];
 const colors = {
     0:'red',
@@ -8,7 +8,7 @@ const colors = {
 }
 
 function checkProperties(textValue) {
-    properties = {};
+    properties = [[], []];
     const textInput = textValue;
     const repeatsArray = [];
     const lineRepeats = document.querySelector('.screen-repeats');
@@ -20,10 +20,11 @@ function checkProperties(textValue) {
         textInput.trim().split('\n').forEach((element) => {
             if(element !== '' && element.includes('=')){
                 const transit = element.split('=');
-                if(transit[0] in properties){
+                if( properties[0].includes(transit[0])){
                     repeatsArray.push(transit[0]);
                 }
-                properties[transit[0]] = transit[1];
+                properties[0].push(transit[0]);
+                properties[1].push(transit[1]);
             }
         });
 
@@ -33,7 +34,7 @@ function checkProperties(textValue) {
             }
 
         }else{
-            if(Object.keys(properties).length > 0){
+            if(properties[0].length > 0){
                 return true;
             }
 
@@ -51,7 +52,6 @@ function toggleValuesBlock(param) {
         break;
         case 1:
             document.querySelector('.values').classList.remove('d-none');
-            
         break;
     }
 }
@@ -82,8 +82,8 @@ function findRepeatsValues(valuesEN, valuesTH) {
                     break;
 
                     default:
-                        cloneArrayEN.push(valuesEN[i]);
-                        cloneArrayTH.push(valuesTH[i]);
+                        cloneArrayEN.push(valuesEN[i].trim());
+                        cloneArrayTH.push(valuesTH[i].trim());
                 }
             }
         }
@@ -100,41 +100,35 @@ function findRepeatsValues(valuesEN, valuesTH) {
     return [cloneArrayEN, cloneArrayTH];
 }
 
-function localizeProperties(propertiesData) {
+function localizeProperties() {
 
     const notFoundLine = document.querySelector('.results_properties_notfound');
-    notFoundLine.innerText = '';
-    const localizedProperties = {};
+    notFoundLine.innerHTML = '';
+    const localizedProperties = [];
     const lostValues =[];
     const screenAfter = document.querySelector('.results_properties_after');
     screenAfter.innerText = '';
 
-        for (let i = 0; i < values[0].length; i++) {
-            let found = false;
-            for(let key in properties){
-                if(properties[key] === values[0][i]){
-                    localizedProperties[key] =  values[1][i];
-                    found = true;
-                }
-            }
-            if(found === false) {
-                lostValues.push([values[0][i], values[1][i]]);
-            }
+    if(properties[0].length > 0){
+       for(let i = 0; i < values[0].length; i++){
+        const index = properties[1].indexOf(values[0][i]);
+        if(index >= 0){
+            localizedProperties.push(properties[0][index] + '=' + values[1][i]);
+        }else {
+            lostValues.push(values[0][i] + '=' + values[1][i]);
+            notFoundLine.innerHTML+= `<tr><td>${values[0][i]}</td><td>${values[1][i]}</td></tr>`;
         }
-        if(Object.keys(localizedProperties).length > 0){
-            for(let key in localizeProperties){
-                screenAfter.innerText += `${key}=${localizedProperties[key]}\n`;
-            }
+       }
+    }
+    
+    if( localizedProperties.length > 0){
+        localizedProperties.sort();
+        for(let i = 0; i < localizedProperties.length; i++){
+            screenAfter.innerText += localizedProperties[i] + '\n';
         }
+    }
 
-        if(lostValues.length > 0){
-            for(let i = 0; i < lostValues.length; i++){
-                notFoundLine.innerText += `${lostValues[i][0]}:${lostValues[i][1]}\n`;
-            }
-        }
-        
 
-        
 }
 
 document.querySelector('.btn-check_properties_doubles').addEventListener('click', () => {
@@ -152,8 +146,8 @@ document.querySelector('.btn_check_repeats').addEventListener('click', function 
        document.querySelector('.localization_results').classList.remove('d-none');
        const linePropertiesBefore = document.querySelector('.results_properties_before');
        linePropertiesBefore.innerText = '';
-       for (let key in properties){
-           linePropertiesBefore.innerText += `${key}=${properties[key]}\n`;
+       for (let i = 0; i < properties[0].length; i++){
+           linePropertiesBefore.innerText += `${properties[0][i]}=${properties[1][i]}\n`;
        }
    } else {
     document.querySelector('.localization_results').classList.add('d-none');
@@ -161,7 +155,7 @@ document.querySelector('.btn_check_repeats').addEventListener('click', function 
 });
 
 document.querySelector('.btn_modify_properties').addEventListener('click', () => {
-    localizeProperties(properties);
+    localizeProperties();
 });
 
 $('.btn_toggle').on('click', function (event) {

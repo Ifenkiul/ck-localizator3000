@@ -28,26 +28,42 @@
                 </div>
                 <button class="btn-check_properties_doubles btn btn-secondary">Find repeats in properties keys</button>
             </div>
-            <div class="row">
+            <div class="row values d-none">
                 <div class="container_input col-6">
                     <label>Input English values here:<br>
-                        <textarea cols="100" rows="5" class="input-textarea input-values_en " disabled></textarea>
+                        <textarea cols="100" rows="5" class="input-textarea input-values_en " ></textarea>
                     </label>
 
                 </div>
                 <div class="container_input col-6">
                     <label>Input TH values here:<br>
-                        <textarea cols="100" rows="5" class="input-textarea input-values_th w-100" disabled></textarea>
+                        <textarea cols="100" rows="5" class="input-textarea input-values_th w-100" ></textarea>
                     </label>
 
                 </div>
+                <div class="col-12">
+                    <div class="screen-results_repeats">
+                        <h2 class="btn_toggle">Repeats in English values</h2>
+                        <div>
+                            <p class="results_values_normal"></p>
+                            <table class="results_repeats" border="1">
+                                
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-12">
+                    <button class="btn_check_repeats btn btn-secondary" >Find repeats in EN values</button>
+                    <button class="btn_modify_properties btn btn-secondary" >LOCALIZE</button>
+                </div>
+                
             </div>
-
+            
         </div>
-        <button class="btn_check_repeats btn btn-secondary" disabled>Find repeats in EN values</button>
-        <button class="btn_modify_properties btn btn-secondary" disabled>LOCALIZE</button>
+        
         <hr>
-        <div class="container-fluid">
+        <div class="container-fluid localization_results d-none">
             <div class="row ">
 
                 <div class="col-12">
@@ -64,19 +80,12 @@
                             <p class="results_properties_after"></p>
                         </div>
                     </div>
-                    <div class="screen-results_repeats">
-                        <h2 class="btn_toggle">Repeats in English values</h2>
-                        <div>
-                            <p class="results_repeats"></p>
-                        </div>
-                    </div>
                     <div class="screen-results_properties_notfound">
                         <h2 class="btn_toggle">Properties not found</h2>
                         <div>
                             <p class="results_properties_notfound"></p>
                         </div>
                     </div>
-
                 </div>
 
             </div>

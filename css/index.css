@@ -40,3 +40,7 @@
 .screen-results_properties_after {
     background-color: lightblue;
 }
+
+.btn_toggle{
+    cursor: pointer;
+}

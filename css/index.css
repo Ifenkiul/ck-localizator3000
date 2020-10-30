@@ -44,3 +44,7 @@
 .btn_toggle{
     cursor: pointer;
 }
+
+.btn_toggle:hover{
+    color:white;
+}

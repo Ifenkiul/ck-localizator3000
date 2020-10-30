@@ -1,4 +1,4 @@
-let properties = [[], []];
+let properties = {}
 let values = [];
 const colors = {
     0:'red',
@@ -8,7 +8,8 @@ const colors = {
 }
 
 function checkProperties(textValue) {
-    properties = [[], []];
+    properties = {};
+    const props = [[], []];;
     const textInput = textValue;
     const repeatsArray = [];
     const lineRepeats = document.querySelector('.screen-repeats');
@@ -19,12 +20,16 @@ function checkProperties(textValue) {
     } else {
         textInput.trim().split('\n').forEach((element) => {
             if(element !== '' && element.includes('=')){
-                const transit = element.split('=');
-                if( properties[0].includes(transit[0])){
+                let a, b;
+                [a, ...b] = element.split('=');
+                b = b.join('=');
+                const transit = [a,b];
+
+                if( props[0].includes(transit[0])){
                     repeatsArray.push(transit[0]);
                 }
-                properties[0].push(transit[0]);
-                properties[1].push(transit[1]);
+                props[0].push(transit[0]);
+                props[1].push(transit[1]);
             }
         });
 
@@ -34,7 +39,16 @@ function checkProperties(textValue) {
             }
 
         }else{
-            if(properties[0].length > 0){
+            if(props[0].length > 0){
+                for(let i = 0; i < props[0].length; i++){
+                    if(properties[props[1][i]]) {
+                        properties[props[1][i]].push(props[0][i]);
+                    } else {
+                        properties[props[1][i]] = [];
+                        properties[props[1][i]].push(props[0][i]);
+                    }
+                }
+                console.log(properties);
                 return true;
             }
 
@@ -82,8 +96,8 @@ function findRepeatsValues(valuesEN, valuesTH) {
                     break;
 
                     default:
-                        cloneArrayEN.push(valuesEN[i].trim());
-                        cloneArrayTH.push(valuesTH[i].trim());
+                        cloneArrayEN.push(valuesEN[i]);
+                        cloneArrayTH.push(valuesTH[i]);
                 }
             }
         }
@@ -97,7 +111,11 @@ function findRepeatsValues(valuesEN, valuesTH) {
         }
         return [];
     }
-    return [cloneArrayEN, cloneArrayTH];
+    return [cloneArrayEN.map((element) =>{
+        return element.trim();
+    }), cloneArrayTH.map((element) => {
+        return element.trim();
+    })];
 }
 
 function localizeProperties() {
@@ -109,17 +127,26 @@ function localizeProperties() {
     const screenAfter = document.querySelector('.results_properties_after');
     screenAfter.innerText = '';
 
-    if(properties[0].length > 0){
+    if(Object.keys(properties).length > 0){
        for(let i = 0; i < values[0].length; i++){
-        const index = properties[1].indexOf(values[0][i]);
-        if(index >= 0){
-            localizedProperties.push(properties[0][index] + '=' + values[1][i]);
-        }else {
+           if(properties[values[0][i]]){
+            properties[values[0][i]].forEach((element) => {
+                localizedProperties.push(element + '=' + values[1][i]);
+            });
+           }else{
             lostValues.push(values[0][i] + '=' + values[1][i]);
             notFoundLine.innerHTML+= `<tr><td>${values[0][i]}</td><td>${values[1][i]}</td></tr>`;
-        }
-       }
+           }
+    //     const index = properties[1].indexOf(values[0][i]);
+    //     if(index >= 0){
+    //         
+    //     }else {
+    //         lostValues.push(values[0][i] + '=' + values[1][i]);
+    //         notFoundLine.innerHTML+= `<tr><td>${values[0][i]}</td><td>${values[1][i]}</td></tr>`;
+    //     }
+    //    }
     }
+}
     
     if( localizedProperties.length > 0){
         localizedProperties.sort();
@@ -142,12 +169,17 @@ document.querySelector('.btn-check_properties_doubles').addEventListener('click'
 
 document.querySelector('.btn_check_repeats').addEventListener('click', function () {
    values = findRepeatsValues(document.querySelector('.input-values_en').value.trim().split('\n'),document.querySelector('.input-values_th').value.trim().split('\n'));
+   console.log(values);
+   console.log(properties);
    if(values.length > 0 && Object.keys(properties).length > 0){
        document.querySelector('.localization_results').classList.remove('d-none');
        const linePropertiesBefore = document.querySelector('.results_properties_before');
        linePropertiesBefore.innerText = '';
-       for (let i = 0; i < properties[0].length; i++){
-           linePropertiesBefore.innerText += `${properties[0][i]}=${properties[1][i]}\n`;
+
+       for(let key in properties){
+           properties[key].forEach((element) => {
+                linePropertiesBefore.innerText += `${element}=${key}\n`;
+           });
        }
    } else {
     document.querySelector('.localization_results').classList.add('d-none');

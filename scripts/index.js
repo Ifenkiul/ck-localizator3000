@@ -4,7 +4,8 @@ const colors = {
     0:'red',
     2:'yellow',
     3:'blue',
-    4:'orange'
+    4:'orange',
+    5: 'purple'
 }
 
 function checkProperties(textValue) {
@@ -87,6 +88,10 @@ function findRepeatsValues(valuesEN, valuesTH) {
                         checkedArray.push([3,valuesEN[i], valuesTH[i]]);
                     break;
 
+                    case valuesTH[i] === "":
+                        checkedArray.push([5, valuesEN[i], valuesTH[i] ])
+                    break;
+
                     case repeatIndex >= 0:
                         if(cloneArrayTH[repeatIndex] === valuesTH[i]){
                             checkedArray.push([2, valuesEN[i], valuesTH[i]]);
@@ -137,14 +142,6 @@ function localizeProperties() {
             lostValues.push(values[0][i] + '=' + values[1][i]);
             notFoundLine.innerHTML+= `<tr><td>${values[0][i]}</td><td>${values[1][i]}</td></tr>`;
            }
-    //     const index = properties[1].indexOf(values[0][i]);
-    //     if(index >= 0){
-    //         
-    //     }else {
-    //         lostValues.push(values[0][i] + '=' + values[1][i]);
-    //         notFoundLine.innerHTML+= `<tr><td>${values[0][i]}</td><td>${values[1][i]}</td></tr>`;
-    //     }
-    //    }
     }
 }
     
@@ -156,6 +153,32 @@ function localizeProperties() {
     }
 
 
+}
+
+function testResults(textToTest, textToCompare){
+    const arrayToTest = textToTest.trim().split('\n');
+    const arrayToCompare = textToCompare.trim().split('\n');
+    const arrayMismatches = [];
+    const lineTestResult = document.querySelector('.test_props_results');
+    const lineMissMatches = document.querySelector('.test_props_mismatches');
+    lineMissMatches.innerText = '';
+    lineTestResult.innerText = '';
+    
+    for(let i = 0; i < arrayToCompare.length; i++){
+        if(arrayToCompare[i] !==''){
+            const index = arrayToTest.indexOf(arrayToCompare[i]);
+        if( index >= 0){
+            lineTestResult.innerText +=`${arrayToCompare[i]} -> ${arrayToTest[index]}\n`;
+        }else{
+            arrayMismatches.push(arrayToCompare[i]);
+        }
+        }
+    }
+    
+    for(let i = 0; i < arrayMismatches.length; i++){
+        lineMissMatches.innerText += arrayMismatches + '\n';
+    }
+    
 }
 
 document.querySelector('.btn-check_properties_doubles').addEventListener('click', () => {
@@ -193,3 +216,7 @@ document.querySelector('.btn_modify_properties').addEventListener('click', () =>
 $('.btn_toggle').on('click', function (event) {
     $(event.currentTarget).next().toggle();
 })
+
+$('.btn_test_props').on('click', () => {
+    testResults($('.props_to_test').val(), $('.props_to_compare').val());
+});

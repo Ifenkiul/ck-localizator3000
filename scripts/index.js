@@ -158,7 +158,7 @@ function localizeProperties() {
 function testResults(textToTest, textToCompare){
     const arrayToTest = textToTest.trim().split('\n');
     const arrayToCompare = textToCompare.trim().split('\n');
-    const arrayMismatches = [];
+    let arrayMismatches = '';
     const lineTestResult = document.querySelector('.test_props_results');
     const lineMissMatches = document.querySelector('.test_props_mismatches');
     lineMissMatches.innerText = '';
@@ -166,19 +166,13 @@ function testResults(textToTest, textToCompare){
     
     for(let i = 0; i < arrayToCompare.length; i++){
         if(arrayToCompare[i] !==''){
-            const index = arrayToTest.indexOf(arrayToCompare[i]);
-        if( index >= 0){
-            lineTestResult.innerText +=`${arrayToCompare[i]} -> ${arrayToTest[index]}\n`;
-        }else{
-            arrayMismatches.push(arrayToCompare[i]);
-        }
+            const index = textToTest.includes(arrayToCompare[i]);
+            if (!index){
+                arrayMismatches += arrayToCompare[i] + '\n';
+            }
         }
     }
-    
-    for(let i = 0; i < arrayMismatches.length; i++){
-        lineMissMatches.innerText += arrayMismatches + '\n';
-    }
-    
+    lineMissMatches.innerText = arrayMismatches;
 }
 
 document.querySelector('.btn-check_properties_doubles').addEventListener('click', () => {
